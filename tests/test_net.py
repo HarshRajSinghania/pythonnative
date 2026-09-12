@@ -213,13 +213,10 @@ def test_custom_content_type_is_preserved_regardless_of_casing(header_name: str)
         body={"name": "Ada"},
         params=None,
     )
-    content_types = [
-        value
-        for name, value in request.header_items()
-        if name.lower() == "content-type"
-    ]
+    content_types = [value for name, value in request.header_items() if name.lower() == "content-type"]
     assert content_types == ["application/merge-patch+json"]
     assert original_headers == {header_name: "application/merge-patch+json"}
+    assert isinstance(request.data, bytes)
     assert json.loads(request.data.decode("utf-8")) == {"name": "Ada"}
 
 
@@ -231,10 +228,7 @@ def test_mapping_body_defaults_to_application_json() -> None:
         body={"name": "Ada"},
         params=None,
     )
-    content_types = [
-        value
-        for name, value in request.header_items()
-        if name.lower() == "content-type"
-    ]
+    content_types = [value for name, value in request.header_items() if name.lower() == "content-type"]
     assert content_types == ["application/json"]
+    assert isinstance(request.data, bytes)
     assert json.loads(request.data.decode("utf-8")) == {"name": "Ada"}
